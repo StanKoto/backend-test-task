@@ -1,14 +1,12 @@
-const path = require('path');
 const express = require('express');
-const dotenv = require('dotenv');
+const envVars = require('./envVariables');
+const db = require('./models/index');
 const positionRouter = require('./routes/positionRoutes');
 const tokenRouter = require('./routes/tokenRoutes');
 const userRouter = require('./routes/userRoutes');
 
-dotenv.config({ path: path.join(__dirname, 'config.env') });
-
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = envVars.main.port || 3000;
 
 app.use(express.json());
 
@@ -17,4 +15,9 @@ app.use('/api/v1/positions', positionRouter);
 app.use('/api/v1/token', tokenRouter);
 app.use('/api/v1/users', userRouter);
 
-app.listen(PORT, console.log(`Listening on port ${PORT}`));
+db.sequelize.authenticate()
+  .then(() => {
+    console.log('PostgreSQL successfully connected');
+    app.listen(PORT, console.log(`Listening on port ${PORT}`));
+  })
+  .catch(err => console.error(err));
