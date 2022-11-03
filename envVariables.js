@@ -19,6 +19,9 @@ module.exports = {
   multer: {
     fileSize: Number(process.env.MULTER_FILE_SIZE)
   },
+  tinyPng: {
+    apiKey: process.env.TINYPNG_API_KEY
+  },
   imageKit: {
     publicApiKey: process.env.IMAGEKIT_PUBLIC_API_KEY,
     privateApiKey: process.env.IMAGEKIT_PRIVATE_API_KEY,

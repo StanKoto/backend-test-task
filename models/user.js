@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
       validate: {
         notNull: {
@@ -59,6 +60,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     phone: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
       validate: {
         notNull: {
@@ -75,7 +77,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     token_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       allowNull: false
     }
   }, {

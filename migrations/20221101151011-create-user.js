@@ -16,10 +16,12 @@ module.exports = {
         },
         email: {
           type: Sequelize.STRING,
+          unique: true,
           allowNull: false
         },
         phone: {
           type: Sequelize.STRING,
+          unique: true,
           allowNull: false
         },
         position_id: {
@@ -37,7 +39,7 @@ module.exports = {
           allowNull: false
         },
         token_id: {
-          type: Sequelize.UUID,
+          type: Sequelize.STRING,
           allowNull: false
         },
         createdAt: {
