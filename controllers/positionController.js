@@ -1,3 +1,5 @@
+'use strict';
+
 const { Position }= require('../models/index');
 const { ErrorResponse } = require('../utils/errorHandling');
 

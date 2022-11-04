@@ -1,3 +1,5 @@
+'use strict';
+
 const { User, Position, sequelize } = require('../models/index');
 const jwt = require('jsonwebtoken');
 const sharp = require('sharp');
