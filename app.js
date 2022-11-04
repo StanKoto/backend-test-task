@@ -11,9 +11,13 @@ const { ErrorResponse, handleErrors } = require('./utils/errorHandling');
 const app = express();
 const PORT = envVars.main.port || 3000;
 
+app.use(express.static('public'));
+
 app.use(express.json());
 
-app.get('/', (req, res, next) => res.redirect('/api/v1/users/1'));
+app.get('/', (req, res, next) => res.sendFile(__dirname + '/views/index.html'));
+app.get('/users', (req, res, next) => res.sendFile(__dirname + '/views/users.html'));
+app.get('/new-user-form', (req, res, next) => res.sendFile(__dirname + '/views/registrationForm.html'));
 app.use('/api/v1/positions', positionRouter);
 app.use('/api/v1/token', tokenRouter);
 app.use('/api/v1/users', userRouter);

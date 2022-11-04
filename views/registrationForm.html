@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <main>
+    <h1>Please fill in the form to create a new user</h1>
+    <form class="registration-form">
+      <span>
+        <label for="username">Name: </label>
+        <input type="text" name="username">
+      </span>
+      <span>
+        <label for="email">Email: </label>
+        <input type="text" name="email">
+      </span>
+      <span>
+        <label for="phone">Phone: </label>
+        <input type="text" name="phone">
+      </span>
+      <span>
+        <label for="position_id">Position_id: </label>
+        <input type="text" name="position_id">
+      </span>
+      <span>
+        <label for="photo">Photo: </label>
+        <input type="file" name="photo">
+      </span>
+      <button>Add new user</button>
+    </form>
+    <div class="success"></div>
+    <div class="error"></div>
+    <span class="nav-links">
+      <a class="btn" href="/">Back to home page</a>
+      <a class="btn" href="/users">View all users</a>
+    </span>
+  </main>
+
+  <script src="/js/createUser.js"></script>
+</body>
+</html>
