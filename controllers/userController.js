@@ -19,15 +19,21 @@ const imagekit = new ImageKit({
 const users_get = async (req, res, next) => {
   try {
     let { page, offset, count = 5 } = req.query;
-    if (!Number.isInteger(Number(count))) throw new ErrorResponse(422, 'Validation failed', 'Wrong count format')
+    count = Number(count);
+    if (!Number.isInteger(count)) throw new ErrorResponse(422, 'Validation failed', 'Wrong count format')
     if (count < 1 || count > 100) throw new ErrorResponse(422, 'Validation failed', 'Wrong count value')
     if (typeof offset === 'undefined') {
-      if (typeof page === 'undefined') offset = 0, page = 1
-      if (!Number.isInteger(Number(page))) throw new ErrorResponse(422, 'Validation failed', 'Wrong page format')
-      if (page < 1) throw new ErrorResponse(422, 'Validation failed', 'Wrong page value')
+      if (typeof page === 'undefined') {
+        offset = 0, page = 1;
+      } else {
+        page = Number(page);
+        if (!Number.isInteger(page)) throw new ErrorResponse(422, 'Validation failed', 'Wrong page format')
+        if (page < 1) throw new ErrorResponse(422, 'Validation failed', 'Wrong page value')
+      }
       offset = (page - 1) * count;
     } else {
-      if (!Number.isInteger(Number(offset))) throw new ErrorResponse(422, 'Validation failed', 'Wrong offset format')
+      offset = Number(offset);
+      if (!Number.isInteger(offset)) throw new ErrorResponse(422, 'Validation failed', 'Wrong offset format')
       if (offset < 0) throw new ErrorResponse(422, 'Validation failed', 'Wrong offset value')
       page = Math.ceil(offset / count) + 1;
     }
@@ -35,8 +41,8 @@ const users_get = async (req, res, next) => {
     const total_users = await User.count();
     if (total_users <= offset) throw new ErrorResponse(422, 'No users found for the chosen offset or page and count')
     const total_pages = Math.ceil(total_users / count);
-    const next_url = page < total_pages ? req.baseUrl + req.path + `?page=${page + 1}&count=${count}` : null;
-    const prev_url = page > 1 ? req.baseUrl + req.path + `?page=${page - 1}&count=${count}` : null;
+    const next_url = page < total_pages ? req.baseUrl + `?page=${page + 1}&count=${count}` : null;
+    const prev_url = page > 1 ? req.baseUrl + `?page=${page - 1}&count=${count}` : null;
 
     const users = await User.findAll({ 
       attributes: { 
@@ -45,7 +51,8 @@ const users_get = async (req, res, next) => {
       },
       // include: { association: 'position', attributes: [ 'name' ] }, // Could have just done this, but then the position name would be shown as a property of a nested object stored on the position property of the returned user record
       offset,
-      limit: count
+      limit: count,
+      order: [['id', 'ASC']]
     });
     if (!users) throw new ErrorResponse(422, 'Users not found')
 

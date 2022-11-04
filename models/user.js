@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
             notNull: {
               msg: 'The position id field is required.'
             },
+            notEmpty: {
+              msg: 'The position id field is required.'
+            },
             isInt: {
               msg: 'The position id must be an integer.'
             }
@@ -39,6 +42,9 @@ module.exports = (sequelize, DataTypes) => {
         notNull: {
           msg: 'The name field is required.'
         },
+        notEmpty: {
+          msg: 'The name field is required.'
+        },
         len: {
           args: [2, 60],
           msg: 'The name must be at least 2 characters long and not longer than 60 characters.'
@@ -53,6 +59,9 @@ module.exports = (sequelize, DataTypes) => {
         notNull: {
           msg: 'The email field is required.'
         },
+        notEmpty: {
+          msg: 'The email field is required.'
+        },
         isEmail: {
           msg: 'The email must be a valid email address.'
         }
@@ -64,6 +73,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
+          msg: 'The phone field is required.'
+        },
+        notEmpty: {
           msg: 'The phone field is required.'
         },
         is: {
