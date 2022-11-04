@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const envVars = require('./envVariables');
 const db = require('./models/index');

@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const { token_get } = require('../controllers/tokenController');
 

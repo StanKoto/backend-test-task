@@ -1,3 +1,5 @@
+'use strict';
+
 class ErrorResponse extends Error {
   constructor(statusCode, message, failReason) {
     super(message);

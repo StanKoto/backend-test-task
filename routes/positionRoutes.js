@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const { positions_get } = require('../controllers/positionController');
 

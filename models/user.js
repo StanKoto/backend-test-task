@@ -78,6 +78,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     token_id: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false
     }
   }, {
