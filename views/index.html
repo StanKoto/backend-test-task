@@ -4,20 +4,20 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Homepage</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
   <main>
     <div class="display-user"></div>
-    <br>
-    <span class="nav-links" hidden>
-      <a class="btn" href="/user-management/users?count=6">Show more</a>
-      <a class="btn" href="/user-management/registration-form">Add new user</a>
+    <br><br>
+    <span class="nav-links">
+      <a class="btn" href="/user-management/users?count=6" hidden>Show more</a>
+      <a class="btn" href="/user-management/registration-form" hidden>Add new user</a>
     </span>
     <div class="error"></div>
   </main>
 
-  <script src="/js/getFirstUser.js"></script>
+  <script type="module" src="/js/userScripts/getFirstUser.js"></script>
 </body>
 </html>

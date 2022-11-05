@@ -14,14 +14,14 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.INTEGER,
           allowNull: false,
           validate: {
-            notNull: {
-              msg: 'The position id field is required.'
+            isInt: {
+              msg: 'The position id must be an integer.'
             },
             notEmpty: {
               msg: 'The position id field is required.'
             },
-            isInt: {
-              msg: 'The position id must be an integer.'
+            notNull: {
+              msg: 'The position id field is required.'
             },
             async checkReferredPosition(value) {
               if (value.trim().length !== 0 && Number.isInteger(Number(value))) {
@@ -45,15 +45,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: {
-          msg: 'The name field is required.'
+        len: {
+          args: [2, 60],
+          msg: 'The name must be at least 2 characters long and not longer than 60 characters.'
         },
         notEmpty: {
           msg: 'The name field is required.'
         },
-        len: {
-          args: [2, 60],
-          msg: 'The name must be at least 2 characters long and not longer than 60 characters.'
+        notNull: {
+          msg: 'The name field is required.'
         }
       }
     },
@@ -62,14 +62,14 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       allowNull: false,
       validate: {
-        notNull: {
-          msg: 'The email field is required.'
+        isEmail: {
+          msg: 'The email must be a valid email address.'
         },
         notEmpty: {
           msg: 'The email field is required.'
         },
-        isEmail: {
-          msg: 'The email must be a valid email address.'
+        notNull: {
+          msg: 'The email field is required.'
         }
       }
     },
@@ -78,15 +78,15 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       allowNull: false,
       validate: {
-        notNull: {
-          msg: 'The phone field is required.'
+        is: {
+          args: ['^[\+]{0,1}380([0-9]{9})$'],
+          msg: 'The phone must be a valid phone number starting with +380 (Ukraine country code).'
         },
         notEmpty: {
           msg: 'The phone field is required.'
         },
-        is: {
-          args: ['^[\+]{0,1}380([0-9]{9})$'],
-          msg: 'The phone must be a valid phone number starting with +380 (Ukraine country code).'
+        notNull: {
+          msg: 'The phone field is required.'
         }
       }
     },
@@ -94,10 +94,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: {
+        notEmpty: {
           msg: 'A user photo is required.'
         },
-        notEmpty: {
+        notNull: {
           msg: 'A user photo is required.'
         }
       }

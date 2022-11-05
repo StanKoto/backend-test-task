@@ -1,7 +1,8 @@
 'use strict';
+import { showErrors } from '../modules/showErrors.js';
 
 const user = document.querySelector('.display-user');
-const navLinks = document.querySelector('.nav-links');
+const navLinks = document.querySelectorAll('.btn');
 const error = document.querySelector('.error');
 
 fetch(document.location.origin + '/api/v1/users/1')
@@ -20,17 +21,9 @@ fetch(document.location.origin + '/api/v1/users/1')
           <li>position_id: ${data.user.position_id}</li>
         </ul>
       `;
-      navLinks.hidden = false;
+      navLinks.forEach(link => link.hidden = false);
     } else {
-      let failInfo = `<h2>${data.message}</h2>`;
-      if (data.fails) {
-        failInfo += '<p>Fails:</p><ul>'
-        for (const key of Object.keys(data.fails)) {
-          failInfo += `<li>${key}: ${data.fails[key]}</li>`;
-        }
-        failInfo += '</ul>';
-      }
-      error.innerHTML = failInfo;
+      showErrors(data, error);
     }
   })
   .catch(err => console.error(err));

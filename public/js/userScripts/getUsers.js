@@ -1,5 +1,7 @@
 'use strict';
 
+import { showErrors } from "../modules/showErrors.js";
+
 const users = document.querySelector('.display-users');
 const error = document.querySelector('.error');
 
@@ -13,12 +15,12 @@ const error = document.querySelector('.error');
   window.history.pushState(nextState, nextTitle, nextUrl);
 
   users.innerHTML = '';
-  document.querySelector('.previous-page').hidden = true;
   document.querySelector('.previous-page').replaceWith(document.querySelector('.previous-page').cloneNode(true));
   const previousPage = document.querySelector('.previous-page');
-  document.querySelector('.next-page').hidden = true;
+  previousPage.hidden = true;
   document.querySelector('.next-page').replaceWith(document.querySelector('.next-page').cloneNode(true));
   const nextPage = document.querySelector('.next-page');
+  nextPage.hidden = true;
 
   fetch(url)
   .then(res => res.json())
@@ -62,16 +64,9 @@ const error = document.querySelector('.error');
         })
         nextPage.hidden = false;
       }
+      document.querySelector('.btn').hidden = false;
     } else {
-      let failInfo = `<h2>${data.message}</h2>`;
-      if (data.fails) {
-        failInfo += '<p>Fails:</p><ul>'
-        for (const key of Object.keys(data.fails)) {
-          failInfo += `<li>${key}: ${data.fails[key]}</li>`;
-        }
-        failInfo += '</ul>';
-      }
-      error.innerHTML = failInfo;
+      showErrors(data, error);
     }
   })
   .catch(err => console.error(err));
