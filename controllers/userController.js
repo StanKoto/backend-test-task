@@ -78,6 +78,8 @@ const users_post = async (req, res, next) => {
     const existingUser = await User.findOne({ where: { token_id: decodedToken.id } });
     if (existingUser) throw new ErrorResponse(401, 'Invalid token')
     req.body.token_id = decodedToken.id;
+
+    if (req.body.phone.length !== 0) req.body.phone = req.body.phone.replace(/\s+/g, '')
     
     const photo = req.file;
     if (photo) {
