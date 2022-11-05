@@ -9,22 +9,20 @@ fetch(document.location.origin + '/api/v1/users/1')
   .then(data => {
     if (data.success) {
       user.innerHTML = `
-        <h1>User #${data.user.id}</h1>
-        <span>
-          <ul>
-            <li>id: ${data.user.id}</li>
-            <li>name: ${data.user.name}</li>
-            <li>email: ${data.user.email}</li>
-            <li>phone: ${data.user.phone}</li>
-            <li>position: ${data.user.position}</li>
-            <li>position_id: ${data.user.position_id}</li>
-          </ul>
-          <img src="${data.user.photo}" alt="User photo" crossorigin="anonymous">
-        </span>
+        <h1>User #${data.user.id}</h1><br>
+        <img src="${data.user.photo}" alt="User photo" crossorigin="anonymous">
+        <ul>
+          <li>id: ${data.user.id}</li>
+          <li>name: ${data.user.name}</li>
+          <li>email: ${data.user.email}</li>
+          <li>phone: ${data.user.phone}</li>
+          <li>position: ${data.user.position}</li>
+          <li>position_id: ${data.user.position_id}</li>
+        </ul>
       `;
       navLinks.hidden = false;
     } else {
-      let failInfo = `<h1>${data.message}</h1>`;
+      let failInfo = `<h2>${data.message}</h2>`;
       if (data.fails) {
         failInfo += '<p>Fails:</p><ul>'
         for (const key of Object.keys(data.fails)) {

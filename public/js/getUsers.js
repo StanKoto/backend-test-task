@@ -26,27 +26,25 @@ const error = document.querySelector('.error');
     if (data.success) {
       const count = data.count < data.total_users ? data.count : data.total_users;
       let usersHTML = `
-        <h1>Page ${data.page} of ${data.total_pages}, showing up to ${count} of ${data.total_users} users</h1>
+        <h1>Page ${data.page} of ${data.total_pages}, showing up to ${count} of ${data.total_users} users</h1><br>
         <ul>
       `;
       for (const user of data.users) {
         usersHTML += `
           <li>
-            <h1>User #${user.id}</h1>
-            <span>
-              <ul>
-                <li>id: ${user.id}</li>
-                <li>name: ${user.name}</li>
-                <li>email: ${user.email}</li>
-                <li>phone: ${user.phone}</li>
-                <li>position: ${user.position}</li>
-                <li>position_id: ${user.position_id}</li>
-                <li>created_at: ${user.createdAt}</li>
-                <li>updated_at: ${user.updatedAt}</li>
-              </ul>
-              <img src="${user.photo}" alt="User photo" crossorigin="anonymous">
-            </span>
-          </li>
+            <h2>User #${user.id}</h2><br>
+            <img src="${user.photo}" alt="User photo" crossorigin="anonymous">
+            <ul>
+              <li>id: ${user.id}</li>
+              <li>name: ${user.name}</li>
+              <li>email: ${user.email}</li>
+              <li>phone: ${user.phone}</li>
+              <li>position: ${user.position}</li>
+              <li>position_id: ${user.position_id}</li>
+              <li>created_at: ${user.createdAt}</li>
+              <li>updated_at: ${user.updatedAt}</li>
+            </ul>
+          </li><br>
         `;
       }
       users.innerHTML = usersHTML + '</ul>';
@@ -65,7 +63,7 @@ const error = document.querySelector('.error');
         nextPage.hidden = false;
       }
     } else {
-      let failInfo = `<h1>${data.message}</h1>`;
+      let failInfo = `<h2>${data.message}</h2>`;
       if (data.fails) {
         failInfo += '<p>Fails:</p><ul>'
         for (const key of Object.keys(data.fails)) {
