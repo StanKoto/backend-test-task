@@ -3,6 +3,7 @@
 const express = require('express');
 const envVars = require('./envVariables');
 const db = require('./models/index');
+const clientRouter = require('./routes/clientRoutes');
 const positionRouter = require('./routes/positionRoutes');
 const tokenRouter = require('./routes/tokenRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -15,9 +16,8 @@ app.use(express.static('public'));
 
 app.use(express.json());
 
-app.get('/', (req, res, next) => res.sendFile(__dirname + '/views/index.html'));
-app.get('/users', (req, res, next) => res.sendFile(__dirname + '/views/users.html'));
-app.get('/new-user-form', (req, res, next) => res.sendFile(__dirname + '/views/registrationForm.html'));
+app.get('/', (req, res, next) => res.redirect('/user-management'));
+app.use('/user-management', clientRouter);
 app.use('/api/v1/positions', positionRouter);
 app.use('/api/v1/token', tokenRouter);
 app.use('/api/v1/users', userRouter);
