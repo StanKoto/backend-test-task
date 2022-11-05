@@ -22,6 +22,12 @@ module.exports = (sequelize, DataTypes) => {
             },
             isInt: {
               msg: 'The position id must be an integer.'
+            },
+            async checkReferredPosition(value) {
+              if (value.trim().length !== 0 && Number.isInteger(Number(value))) {
+                const referredPosition = await models.Position.findByPk(Number(value));
+                if (!referredPosition) throw new Error('The referred position must be present in the current position list!')
+              }
             }
           }
         }
@@ -86,7 +92,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     photo: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'A user photo is required.'
+        },
+        notEmpty: {
+          msg: 'A user photo is required.'
+        }
+      }
     },
     token_id: {
       type: DataTypes.STRING,

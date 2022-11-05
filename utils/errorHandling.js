@@ -32,16 +32,10 @@ const handleErrors = (err, req, res, next) => {
   if (err instanceof ErrorResponse) {
     if (err.failReason) {
       switch (err.failReason) {
-        case 'Referred position missing':
-          fails.position_id = 'The referred position must be present in the current position list!';
+        case 'Image is invalid.':
+          fails.photo = err.failReason;
           break;
-        case 'Image is invalid':
-          fails.photo = err.message;
-          break;
-        case 'User photo missing':
-          fails.photo = 'A user photo is required.';
-          break;
-        case 'Image too small':
+        case 'Img too small':
           fails.photo = 'A user photo must be at least 70 pixels high and 70 pixels wide.';
           break;
         case 'Wrong count format':

@@ -19,6 +19,7 @@ const imagekit = new ImageKit({
 const users_get = async (req, res, next) => {
   try {
     let { page, offset, count = 5 } = req.query;
+    if (count.trim().length === 0) throw new ErrorResponse(422, 'Validation failed', 'Wrong count format')
     count = Number(count);
     if (!Number.isInteger(count)) throw new ErrorResponse(422, 'Validation failed', 'Wrong count format')
     if (count < 1 || count > 100) throw new ErrorResponse(422, 'Validation failed', 'Wrong count value')
@@ -26,12 +27,14 @@ const users_get = async (req, res, next) => {
       if (typeof page === 'undefined') {
         offset = 0, page = 1;
       } else {
+        if (page.trim().length === 0) throw new ErrorResponse(422, 'Validation failed', 'Wrong page format')
         page = Number(page);
         if (!Number.isInteger(page)) throw new ErrorResponse(422, 'Validation failed', 'Wrong page format')
         if (page < 1) throw new ErrorResponse(422, 'Validation failed', 'Wrong page value')
       }
       offset = (page - 1) * count;
     } else {
+      if (offset.trim().length === 0) throw new ErrorResponse(422, 'Validation failed', 'Wrong offset format')
       offset = Number(offset);
       if (!Number.isInteger(offset)) throw new ErrorResponse(422, 'Validation failed', 'Wrong offset format')
       if (offset < 0) throw new ErrorResponse(422, 'Validation failed', 'Wrong offset value')
@@ -50,9 +53,9 @@ const users_get = async (req, res, next) => {
         exclude: [ 'token_id' ]
       },
       // include: { association: 'position', attributes: [ 'name' ] }, // Could have just done this, but then the position name would be shown as a property of a nested object stored on the position property of the returned user record
+      order: [['id', 'ASC']],
       offset,
-      limit: count,
-      order: [['id', 'ASC']]
+      limit: count
     });
     if (!users) throw new ErrorResponse(422, 'Users not found')
 
@@ -70,28 +73,25 @@ const users_post = async (req, res, next) => {
     const existingUser = await User.findOne({ where: { token_id: decodedToken.id } });
     if (existingUser) throw new ErrorResponse(401, 'Invalid token')
     req.body.token_id = decodedToken.id;
-
-    const referredPosition = await Position.findByPk(req.body.position_id);
-    if (!referredPosition) throw new ErrorResponse(422, 'Validation failed', 'Referred position missing')
     
     const photo = req.file;
-    if (!photo) throw new ErrorResponse(422, 'Validation failed', 'User photo missing')
-    const photoParams = await sharp(photo.buffer).metadata();
-    if (photoParams.width < 70 || photoParams.height < 70) throw new ErrorResponse(422, 'Validation failed', 'Image too small')
-    
-    req.body.photo = 'placeholderURL';
-    const newUser = await User.create(req.body);
-    
-    photo.buffer = await sharp(photo.buffer).resize(70, 70).toBuffer();
-    photo.buffer = await tinify.fromBuffer(photo.buffer).toBuffer();
-    const imageKitResponse = await imagekit.upload({
-      file: photo.buffer.toString('base64'),
-      fileName: photo.originalname.split('.')[0].concat('.jpg'),
-      folder: '/abz-test-task/photos'
-    });
+    if (photo) {
+      const photoParams = await sharp(photo.buffer).metadata();
+      if (photoParams.width < 70 || photoParams.height < 70) throw new ErrorResponse(422, 'Validation failed', 'Img too small')
+       
+      photo.buffer = await sharp(photo.buffer).resize(70, 70).toBuffer();
+      photo.buffer = await tinify.fromBuffer(photo.buffer).toBuffer();
+      const imageKitResponse = await imagekit.upload({
+        file: photo.buffer.toString('base64'),
+        fileName: photo.originalname.split('.')[0].concat('.jpg'),
+        folder: '/abz-test-task/photos'
+      });
+      req.body.photo = imageKitResponse.url;
+    } else {
+      delete req.body.photo;
+    }
 
-    newUser.photo = imageKitResponse.url;
-    await newUser.save();
+    const newUser = await User.create(req.body);
 
     res.json({ success: true, user_id: newUser.id, message: "New user successfully registered" });
   } catch (err) {
