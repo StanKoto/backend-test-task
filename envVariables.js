@@ -18,6 +18,10 @@ module.exports = {
     secret: process.env.JWT_SECRET,
     expiresIn: Number(process.env.JWT_EXPIRES_IN)
   },
+  limiter: {
+    windowMS: Number(process.env.LIMITER_WINDOW_MS),
+    max: Number(process.env.LIMITER_MAX)
+  },
   multer: {
     fileSize: Number(process.env.MULTER_FILE_SIZE)
   },
