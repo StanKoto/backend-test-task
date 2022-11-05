@@ -69,4 +69,4 @@ const error = document.querySelector('.error');
     }
   })
   .catch(err => console.error(err));
-}) (document.location.origin + '/api/v1/users?count=6')
+}) (document.location.origin + '/api/v1/users' + document.location.search)
