@@ -4,6 +4,14 @@ const users = document.querySelector('.display-users');
 const error = document.querySelector('.error');
 
 (function getUsers (url) {
+  let nextUrl = document.location.origin + document.location.pathname;
+  let currentSearchParams = url.split('?')[1];
+  if (!currentSearchParams) currentSearchParams = 'count=5'
+  nextUrl = nextUrl.concat(`?${currentSearchParams}`)
+  const nextTitle = 'Another page';
+  const nextState = { additionalInformation: 'Loaded another page with search results' };
+  window.history.pushState(nextState, nextTitle, nextUrl);
+
   users.innerHTML = '';
   document.querySelector('.previous-page').hidden = true;
   document.querySelector('.previous-page').replaceWith(document.querySelector('.previous-page').cloneNode(true));
@@ -18,7 +26,7 @@ const error = document.querySelector('.error');
     if (data.success) {
       const count = data.count < data.total_users ? data.count : data.total_users;
       let usersHTML = `
-        <h1>Page ${data.page} of ${data.total_pages}, showing ${count} of ${data.total_users} users</h1>
+        <h1>Page ${data.page} of ${data.total_pages}, showing up to ${count} of ${data.total_users} users</h1>
         <ul>
       `;
       for (const user of data.users) {

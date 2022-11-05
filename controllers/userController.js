@@ -18,11 +18,15 @@ const imagekit = new ImageKit({
 
 const users_get = async (req, res, next) => {
   try {
-    let { page, offset, count = 5 } = req.query;
-    if (count.trim().length === 0) throw new ErrorResponse(422, 'Validation failed', 'Wrong count format')
-    count = Number(count);
-    if (!Number.isInteger(count)) throw new ErrorResponse(422, 'Validation failed', 'Wrong count format')
-    if (count < 1 || count > 100) throw new ErrorResponse(422, 'Validation failed', 'Wrong count value')
+    let { page, offset, count } = req.query;
+    if (typeof count === 'undefined') {
+      count = 5;
+    } else {
+      if (count.trim().length === 0) throw new ErrorResponse(422, 'Validation failed', 'Wrong count format')
+      count = Number(count);
+      if (!Number.isInteger(count)) throw new ErrorResponse(422, 'Validation failed', 'Wrong count format')
+      if (count < 1 || count > 100) throw new ErrorResponse(422, 'Validation failed', 'Wrong count value')
+    }
     if (typeof offset === 'undefined') {
       if (typeof page === 'undefined') {
         offset = 0, page = 1;
@@ -43,9 +47,10 @@ const users_get = async (req, res, next) => {
 
     const total_users = await User.count();
     if (total_users <= offset) throw new ErrorResponse(422, 'No users found for the chosen offset or page and count')
-    const total_pages = Math.ceil(total_users / count);
-    const next_url = page < total_pages ? req.baseUrl + `?page=${page + 1}&count=${count}` : null;
-    const prev_url = page > 1 ? req.baseUrl + `?page=${page - 1}&count=${count}` : null;
+    const total_pages = Math.ceil(offset / count) + Math.ceil((total_users - offset) / count);
+    const next_url = page < total_pages ? req.baseUrl + `?offset=${offset + count}&count=${count}` : null;
+    const prevUrlSearch = page === 2 ? `?count=${count}`: page > 2 ? `?offset=${offset - count}&count=${count}` : null;
+    const prev_url = page >= 2 ? req.baseUrl + prevUrlSearch : null;
 
     const users = await User.findAll({ 
       attributes: { 
