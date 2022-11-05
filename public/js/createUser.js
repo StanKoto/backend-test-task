@@ -30,10 +30,10 @@ form.addEventListener('submit', e => {
           form.reset();
           if (data.success) {
             success.innerHTML = `
-              <h2>${data.message}: new user's id equals ${data.user_id}</h2>
+              <h3>${data.message}: new user's id equals ${data.user_id}</h3>
             `;
           } else {
-            let failInfo = `<h1>${data.message}</h1>`;
+            let failInfo = `<h2>${data.message}</h2>`;
             if (data.fails) {
               failInfo += '<p>Fails:</p><ul>'
               for (const key of Object.keys(data.fails)) {
