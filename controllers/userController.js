@@ -1,6 +1,6 @@
 'use strict';
 
-const { User, Position, sequelize } = require('../models/index');
+const { User, sequelize } = require('../models/index');
 const jwt = require('jsonwebtoken');
 const sharp = require('sharp');
 const tinify = require('tinify');
@@ -72,6 +72,8 @@ const users_get = async (req, res, next) => {
 
 const users_post = async (req, res, next) => {
   try {
+    let newUser;
+
     const token = req.headers.token;
     if (!token) throw new ErrorResponse(401, 'No token provided')
     const decodedToken = jwt.verify(token, envVars.jwt.secret);
@@ -85,22 +87,25 @@ const users_post = async (req, res, next) => {
     if (photo) {
       const photoParams = await sharp(photo.buffer).metadata();
       if (photoParams.width < 70 || photoParams.height < 70) throw new ErrorResponse(422, 'Validation failed', 'Img too small')
-       
-      photo.buffer = await sharp(photo.buffer).resize(70, 70).toBuffer();
-      photo.buffer = await tinify.fromBuffer(photo.buffer).toBuffer();
-      const imageKitResponse = await imagekit.upload({
-        file: photo.buffer.toString('base64'),
-        fileName: photo.originalname.split('.')[0].concat('.jpg'),
-        folder: '/abz-test-task/photos'
+      req.body.photo = 'Photo link placeholder';
+      await sequelize.transaction(async t => {
+        newUser = await User.create(req.body, { transaction: t });
+        photo.buffer = await tinify.fromBuffer(photo.buffer).toBuffer();
+        photo.buffer = await sharp(photo.buffer).resize(70, 70).toBuffer();
+        const imageKitResponse = await imagekit.upload({
+          file: photo.buffer.toString('base64'),
+          fileName: photo.originalname.split('.')[0].concat('.jpg'),
+          folder: '/abz-test-task/photos'
+        });
+        newUser.photo = imageKitResponse.url;
+        await newUser.save({ transaction: t });
       });
-      req.body.photo = imageKitResponse.url;
+
+      res.json({ success: true, user_id: newUser.id, message: "New user successfully registered" });
     } else {
       delete req.body.photo;
+      await User.create(req.body);
     }
-
-    const newUser = await User.create(req.body);
-
-    res.json({ success: true, user_id: newUser.id, message: "New user successfully registered" });
   } catch (err) {
     next(err);
   }
